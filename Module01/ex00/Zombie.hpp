@@ -5,6 +5,8 @@
 
 class Zombie
 {
+private:
+
 	std::string _name;
 
 public:

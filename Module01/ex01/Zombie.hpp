@@ -5,6 +5,8 @@
 
 class Zombie
 {
+private:
+
 	static int _nbInst;
 
 	std::string _name;
