@@ -1,14 +1,12 @@
 #include <iostream>
 #include "Harl.hpp"
 
-/*HarlMemberFn Harl::_f[4] = {
+HarlMemberFn Harl::_f[4] = {
 	&Harl::debug, 
 	&Harl::info,
 	&Harl::warning,
 	&Harl::error
-};*/
-
-HarlMemberFn Harl::_f = &Harl::debug;
+};
 
 std::string Harl::_levels[4] = {
 	"DEBUG",
@@ -62,5 +60,5 @@ void Harl::complain(std::string level) const
 {
 	for (int i = 0; i < 4; i++)
 		if (level == _levels[i])
-			(*_f)();
+			(this->*_f[i])();
 }

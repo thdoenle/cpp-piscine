@@ -7,8 +7,7 @@ class Harl
 {
 private:
 
-	//static void 		(Harl::*_f[4])(void) const;
-	static void			(Harl::*_f)(void) const;
+	static void 		(Harl::*_f[4])(void) const;
 	static std::string	_levels[4];
 
 	void debug(void) const;

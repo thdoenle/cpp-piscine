@@ -4,6 +4,7 @@
 int main(void)
 {
 	Harl harl;
+	std::cout << std::endl;
 
 	harl.complain("ERROR");
 	harl.complain("WARNING");
