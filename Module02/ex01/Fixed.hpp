@@ -13,6 +13,8 @@ public:
 
     Fixed(void);
     Fixed(Fixed const & src);
+    Fixed(const int & src);
+    Fixed(const float & src);
     ~Fixed(void);
     Fixed & operator=(Fixed const & rhs);
     int     getRawBits(void) const;
