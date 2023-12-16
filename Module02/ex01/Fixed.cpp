@@ -1,4 +1,5 @@
 #include <iostream>
+#include <math.h>
 #include "Fixed.hpp"
 
 Fixed::Fixed(void) : _value(0)
@@ -12,27 +13,14 @@ Fixed::Fixed(Fixed const & src)
     _value = src.getRawBits();
 }
 
-Fixed::Fixed(const int & src) : _value(0)
+Fixed::Fixed(const int & src) : _value(src * (1 << _FRAC_BITS))
 {
-    unsigned char       exp = 0;
-    unsigned int        usrc = src;
-
     std::cout << "Int constructor called" << std::endl;
-    if (!src)
-        return;
-    if (src < 0)
-        usrc = ~usrc + 1;
-    for (unsigned char i = 0; i < 32; i++)
-    {
-        if ((1 << i) & usrc)
-            exp = i;
-    }
-    usrc &= ~(1 << exp);
-    _value = (exp < 23 ? (usrc << (23 - exp)) : (usrc >> (exp - 23)));
-    exp += 127;
-    _value |= (exp << 23);
-    if (src < 0)
-        _value |= 1 << 31;
+}
+
+Fixed::Fixed(const float & src) : _value((int)roundf(src * (1 << _FRAC_BITS)))
+{
+    std::cout << "Float constructor called" << std::endl;
 }
 
 Fixed::~Fixed(void)
@@ -47,14 +35,28 @@ Fixed & Fixed::operator=(Fixed const & rhs)
     return *this;
 }
 
+std::ostream & operator<<(std::ostream & o, Fixed const & f)
+{
+    std::cout << f.toFloat();
+    return o;
+}
+
 int Fixed::getRawBits(void) const
 {
-    std::cout << "getRawBits member function called" << std::endl;
     return _value;
 }
 
 void Fixed::setRawBits(int const raw)
 {
-    std::cout << "setRawBits member function called" << std::endl;
     _value = raw;
+}
+
+float   Fixed::toFloat(void) const
+{
+    return ((float)_value / (1 << _FRAC_BITS));
+}
+
+int     Fixed::toInt(void) const
+{
+    return _value / (1 << _FRAC_BITS);
 }
