@@ -21,7 +21,7 @@ Fixed & Fixed::operator=(Fixed const & rhs)
 
 bool Fixed::operator>(Fixed const & rhs) const
 {
-    return _value < rhs.getRawBits();
+    return _value > rhs.getRawBits();
 }
 
 bool Fixed::operator>=(Fixed const & rhs) const
@@ -137,7 +137,7 @@ Fixed const & Fixed::max(Fixed const & lhs, Fixed const & rhs)
 
 std::ostream & operator<<(std::ostream & o, Fixed const & f)
 {
-    std::cout << f.toFloat();
+    o << f.toFloat();
     return o;
 }
 
@@ -158,5 +158,5 @@ float Fixed::toFloat(void) const
 
 int Fixed::toInt(void) const
 {
-    return _value / (1 << _FRAC_BITS);
+    return _value >> _FRAC_BITS;
 }
