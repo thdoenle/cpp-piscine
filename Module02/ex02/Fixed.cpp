@@ -67,20 +67,12 @@ Fixed Fixed::operator-(Fixed const & rhs) const
 
 Fixed Fixed::operator*(Fixed const & rhs) const
 {
-    Fixed x = *this;
-
-    std::cout << x << std::endl;
-    x.setRawBits(_value * rhs.getRawBits());
-    std::cout << x << std::endl;
-    return x;
+    return this->toFloat() * rhs.toFloat();
 }
 
 Fixed Fixed::operator/(Fixed const & rhs) const
 {
-    Fixed x = *this;
-
-    x.setRawBits(_value / rhs.getRawBits());
-    return x;
+    return this->toFloat() / rhs.toFloat();
 }
 
 Fixed & Fixed::operator++(void)

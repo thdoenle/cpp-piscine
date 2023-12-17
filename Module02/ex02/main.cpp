@@ -18,5 +18,17 @@ int main(void)
 
     std::cout << Fixed::max( a, b ) << std::endl;
 
+    std::cout << "More tests:" << std::endl;
+
+    std::cout << a << std::endl;
+    std::cout << a + b - b << std::endl;
+    std::cout << a + b * 0 << std::endl;
+    std::cout << Fixed(34) / 16 << std::endl;
+    std::cout << --a << std::endl;
+    std::cout << a-- << std::endl;
+    std::cout << a-- << std::endl;
+    std::cout << a << std::endl;
+    std::cout << --a << std::endl;
+
     return 0;
 }
