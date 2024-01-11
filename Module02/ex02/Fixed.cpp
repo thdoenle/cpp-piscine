@@ -158,5 +158,5 @@ float Fixed::toFloat(void) const
 
 int Fixed::toInt(void) const
 {
-    return _value >> _FRAC_BITS;
+    return _value / (1 << _FRAC_BITS);
 }

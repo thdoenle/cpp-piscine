@@ -13,7 +13,7 @@ Fixed::Fixed(Fixed const & src)
     _value = src.getRawBits();
 }
 
-Fixed::Fixed(const int & src) : _value(src << _FRAC_BITS)
+Fixed::Fixed(const int & src) : _value(src * (1 << _FRAC_BITS))
 {
     std::cout << "Int constructor called" << std::endl;
 }
@@ -58,5 +58,5 @@ float   Fixed::toFloat(void) const
 
 int     Fixed::toInt(void) const
 {
-    return _value >> _FRAC_BITS;
+    return _value / (1 << _FRAC_BITS);
 }
