@@ -1,61 +1,16 @@
 #include "ClapTrap.hpp"
 #include <iostream>
 
-ClapTrap **		ClapTrap::_instances = NULL;
-unsigned int	ClapTrap::_nbInstances = 0;
-
-void ClapTrap::addToInstances(void) const
-{
-	ClapTrap ** instances;
-
-	_nbInstances++;
-	instances = new ClapTrap * [_nbInstances];
-	for (unsigned int i = 0; i < _nbInstances - 1; i++)
-		instances[i] = _instances[i];
-	instances[_nbInstances - 1] = (ClapTrap *) this;
-	delete [] _instances;
-	_instances = instances;
-}
-
-void ClapTrap::removeFromInstances(void) const
-{
-	ClapTrap ** 	instances = NULL;
-	unsigned int	offset = 0;
-
-	_nbInstances--;
-	if (_nbInstances)
-		instances = new ClapTrap * [_nbInstances];
-	for (unsigned int i = 0; i < _nbInstances; i++)
-	{
-		if (_instances[i] == this)
-			offset = 1;
-		else
-			instances[i] = _instances[i + offset];
-	}
-	delete [] _instances;
-	_instances = instances;
-}
-
-ClapTrap * ClapTrap::findByName(std::string const & name) const
-{
-	for (unsigned int i = 0; i < _nbInstances; i++)
-		if (name == _instances[i]->getName())
-			return _instances[i];
-	return NULL;
-}
-
 ClapTrap::ClapTrap(void) : _name(""), _hitPoints(10), _energyPoints(10),
 	_attackDamage(0)
 {
 	std::cout << "Default constructor called" << std::endl;
-	addToInstances();
 }
 
 ClapTrap::ClapTrap(std::string const & name) : _name(name), _hitPoints(10),
 	_energyPoints(10), _attackDamage(0)
 {
 	std::cout << "Name constructor called" << std::endl;
-	addToInstances();
 }
 
 ClapTrap::ClapTrap(ClapTrap const & src) : _name(src.getName()),
@@ -63,13 +18,11 @@ ClapTrap::ClapTrap(ClapTrap const & src) : _name(src.getName()),
 	_attackDamage(src.getAttackDamage())
 {
 	std::cout << "Copy constructor called" << std::endl;
-	addToInstances();
 }
 
 ClapTrap::~ClapTrap(void)
 {
 	std::cout << "Destructor called" << std::endl;
-	removeFromInstances();
 }
 
 ClapTrap & ClapTrap::operator=(ClapTrap const & rhs)
@@ -95,18 +48,9 @@ void ClapTrap::attack(std::string const & target)
 			<< std::endl;
 		return;
 	}
-
-	ClapTrap * targetInst = findByName(target);
-
-	if (!targetInst)
-	{
-		std::cout << "No ClapTrap named " << target << "!" << std::endl;
-		return;
-	}
 	std::cout << "ClapTrap " << _name << " attack " << target << ", causing "
 		<< _attackDamage << " points of damage!" << std::endl;
 	_energyPoints--;
-	targetInst->takeDamage(_attackDamage);
 }
 
 void ClapTrap::takeDamage(unsigned int amount)
@@ -137,12 +81,16 @@ void ClapTrap::beRepaired(unsigned int amount)
 	if (!_energyPoints)
 	{
 		std::cout << "ClapTrap " << _name
-			<< " is to tired to repair themselves!" << std::endl;
+			<< " is too tired to repair themselves!" << std::endl;
 		return;
 	}
 	std::cout << "Clap Trap " << _name << " hit points increase from "
 		<< _hitPoints;
-	_hitPoints += amount;
+	if (_hitPoints > amount + _hitPoints
+		|| amount > amount + _hitPoints)
+		_hitPoints = 4294967295U;
+	else
+		_hitPoints += amount;
 	_energyPoints--;
 	std::cout << " to " << _hitPoints << "!" << std::endl;
 }

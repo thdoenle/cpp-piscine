@@ -7,13 +7,6 @@ class ClapTrap
 {
 private:
 
-	static ClapTrap **	_instances;
-	static unsigned int	_nbInstances;
-
-	void 		addToInstances(void) const;
-	void 		removeFromInstances(void) const;
-	ClapTrap *	findByName(std::string const & name) const;
-
 	std::string		_name;
 	unsigned int	_hitPoints;
 	unsigned int	_energyPoints;

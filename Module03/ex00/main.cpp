@@ -4,21 +4,23 @@
 int main(void)
 {
     ClapTrap shinobi("Shinobi");
-	ClapTrap ninja = ClapTrap("Ninja");
+	ClapTrap shinobi2;
+	shinobi2 = shinobi;
+	ClapTrap shinobi3(shinobi);
+	std::cout << std::endl;
 
-	ninja.attack("Shinobi");
-	ninja.takeDamage(4);
-	ninja.attack("Samourai");
+	shinobi.attack("Someone");
+	shinobi.attack("Someone else");
+	shinobi.beRepaired(10);
+	std::cout << std::endl;
 
-	ClapTrap samourai("Samourai");
+	shinobi2.beRepaired(4000000000);
+	shinobi2.beRepaired(1000000000);
+	std::cout << std::endl;
 
-	samourai.attack("Ninja");
-	ninja.takeDamage(4);
-	ninja.beRepaired(1);
-	for (int i = 0; i < 11; i++)
-		shinobi.attack("Samourai");
-	shinobi.beRepaired(1);
-	ninja.takeDamage(4);
-	ninja.attack("");
-	ninja.beRepaired(10);
+	shinobi3.takeDamage(12);
+	shinobi3.attack("");
+	shinobi3.beRepaired(10);
+	shinobi3.takeDamage(1);
+	std::cout << std::endl;
 }
