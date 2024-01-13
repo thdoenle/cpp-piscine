@@ -1,7 +1,7 @@
 #include "ScavTrap.hpp"
 #include <iostream>
 
-ScavTrap::ScavTrap(void)// : ClapTrap()
+ScavTrap::ScavTrap(void)
 {
 	_hitPoints = 100;
 	_energyPoints = 50;
@@ -11,11 +11,17 @@ ScavTrap::ScavTrap(void)// : ClapTrap()
 
 ScavTrap::ScavTrap(std::string const & name) : ClapTrap(name)
 {
+	_hitPoints = 100;
+	_energyPoints = 50;
+	_attackDamage = 20;
 	std::cout << "ScavTrap name constructor called" << std::endl;
 }
 
 ScavTrap::ScavTrap(ScavTrap const & src) : ClapTrap(src)
 {
+	_hitPoints = 100;
+	_energyPoints = 50;
+	_attackDamage = 20;
 	std::cout << "ScavTrap copy constructor called" << std::endl;
 }
 
@@ -50,4 +56,14 @@ void ScavTrap::attack(std::string const & target)
 	std::cout << "ScavTrap " << _name << " attack " << target << ", causing "
 		<< _attackDamage << " points of damage!" << std::endl;
 	_energyPoints--;
+}
+
+void ScavTrap::guardGate(void)
+{
+	std::cout << "ScavTrap " << _name << " is now in gate keeper mode.";
+	if (!_hitPoints)
+		std::cout << " (while KO?!)";
+	else if (!_energyPoints)
+		std::cout << " (while tired?)";
+	std::cout << std::endl;
 }
