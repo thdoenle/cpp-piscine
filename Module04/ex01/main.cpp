@@ -19,7 +19,7 @@ int main()
 		Cat a;
 		Cat b;
 
-		a.addIdea("lol");
+		a.addIdea("croquette");
 		b = a;
 		b.addIdea("miam");
 		b.addIdea("ROnronn");

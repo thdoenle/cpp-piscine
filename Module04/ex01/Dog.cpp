@@ -5,7 +5,7 @@
 Dog::Dog(void)
 {
 	_type = "Dog";
-	_brain = new Brain;
+	_brain = new Brain();
 	std::cout << "Dog default created" << std::endl;
 }
 
