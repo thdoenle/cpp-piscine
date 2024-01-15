@@ -50,6 +50,10 @@ int main()
 		for (int i = 4; i < 8; i++)
 			tab[i] = new Cat(catBase);
 		
+		std::cout << "--- PRINT TYPES ---" << std::endl;
+		for (int i = 0; i < 8; i++)
+			std::cout << i << " -> " << tab[i]->getType() << std::endl;
+		
 		std::cout << "--- DELETE TAB ---" << std::endl;
 		for (int i = 0; i < 8; i++)
 			delete tab[i];
