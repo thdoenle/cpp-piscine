@@ -6,7 +6,7 @@ Bureaucrat::Bureaucrat(void) : _grade(150), _name("Joe")
 	std::cout << "Default Bureaucrat made" << std::endl;
 }
 
-Bureaucrat::Bureaucrat(Bureaucrat const & src) : _grade(src.getGrade()), _name("Joe")
+Bureaucrat::Bureaucrat(Bureaucrat const & src) : _grade(src.getGrade()), _name(src.getName())
 {
 	std::cout << "Copy Bureaucrat made" << std::endl;
 }
