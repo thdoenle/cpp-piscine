@@ -6,9 +6,16 @@
 
 class Bureaucrat;
 
-class Form
+class AForm
 {
 private:
+
+	std::string const _name;
+	bool _isSigned;
+	int const _signGrade;
+	int const _execGrade;
+
+public:
 
 	class GradeTooHighException : public std::exception
 	{
@@ -22,27 +29,30 @@ private:
 		virtual const char * what(void) const throw();
 	};
 
-	std::string const _name;
-	bool _isSigned;
-	int const _signGrade;
-	int const _execGrade;
+	class FormNotSignedException : public std::exception
+	{
+	public:
+		virtual const char * what(void) const throw();
+	};
 
-public:
-
-	Form(void);
-	Form(Form const & src);
-	Form(std::string const & name, int const & signGrade, int const & execGrade);
-	~Form(void);
-	Form & operator=(Form const & rhs);
+	AForm(void);
+	AForm(AForm const & src);
+	AForm(std::string const & name, int const & signGrade, int const & execGrade);
+	~AForm(void);
+	AForm & operator=(AForm const & rhs);
 
 	void beSigned(Bureaucrat const & b);
+	void execute(Bureaucrat const & executor) const;
+	virtual void performAction(std::string const & target) const = 0;
 
 	std::string const & getName(void) const;
 	bool const & getIsSigned(void) const;
 	int const & getSignGrade(void) const;
 	int const & getExecGrade(void) const;
+
+	void setIsSigned(bool const & value);
 };
 
-std::ostream & operator<<(std::ostream & o, Form const & f);
+std::ostream & operator<<(std::ostream & o, AForm const & f);
 
 #endif

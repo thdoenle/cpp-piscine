@@ -1,50 +1,33 @@
 #include <iostream>
 #include "Bureaucrat.hpp"
-#include "Form.hpp"
+#include "ShrubberyCreationForm.hpp"
+#include "RobotomyRequestForm.hpp"
+#include "PresidentialPardonForm.hpp"
 
 int main()
 {
-	try
-	{
-		Form form("Error", 0, 50);
-		std::cout << form;
-	}
-	catch (const std::exception & e)
-	{
-		std::cout << e.what() << std::endl;
-	}
-	std::cout << std::endl;
+	Bureaucrat john("John", 72);
+	Bureaucrat boss("The Boss", 1);
 
-	try
-	{
-		Form form("Error", 30, 180);
-		std::cout << form;
-	}
-	catch (const std::exception & e)
-	{
-		std::cout << e.what() << std::endl;
-	}
 	std::cout << std::endl;
-	
-	try
-	{
-		Bureaucrat lowB("Not the boss", 150);
-		std::cout << lowB;
-		Form middle("Middle", 75, 75);
-		middle.beSigned(lowB);
-		std::cout << "middle" << std::endl;
-	}
-	catch (const std::exception & e)
-	{
-		std::cout << e.what() << std::endl;
-	}
+	ShrubberyCreationForm garden("garden");
+	john.executeForm(garden);
+	john.signForm(garden);
+	john.executeForm(garden);
+
 	std::cout << std::endl;
+	RobotomyRequestForm subject("Subject 427");
+	john.signForm(subject);
+	boss.executeForm(subject);
+	boss.signForm(subject);
+	john.executeForm(subject);
 
-	Form conf("Confidential", 5, 5);
-	Bureaucrat boris("Boris", 6);
+	std::cout << std::endl;
+	PresidentialPardonForm stanley("Stanley");
+	boss.executeForm(stanley);
+	boss.signForm(stanley);
+	john.executeForm(stanley);
+	boss.executeForm(stanley);
 
-	boris.signForm(conf);
-	boris.incGrade();
-	boris.signForm(conf);
-	boris.signForm(conf);
+	std::cout << std::endl;
 }

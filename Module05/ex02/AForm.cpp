@@ -41,6 +41,15 @@ void AForm::beSigned(Bureaucrat const & b)
 	_isSigned = true;
 }
 
+void AForm::execute(Bureaucrat const & executor) const
+{
+	if (!_isSigned)
+		throw FormNotSignedException();
+	if (executor.getGrade() > _execGrade)
+		throw GradeTooLowException();
+	performAction(_name);
+}
+
 std::string const & AForm::getName(void) const
 {
 	return _name;
@@ -61,6 +70,11 @@ int const & AForm::getExecGrade(void) const
 	return _execGrade;
 }
 
+void AForm::setIsSigned(bool const & value)
+{
+	_isSigned = value;
+}
+
 const char * AForm::GradeTooHighException::what(void) const throw()
 {
 	return "FORM ERROR: Grade is too high";
@@ -69,6 +83,11 @@ const char * AForm::GradeTooHighException::what(void) const throw()
 const char * AForm::GradeTooLowException::what(void) const throw()
 {
 	return "FORM ERROR: Grade is too low";
+}
+
+const char * AForm::FormNotSignedException::what(void) const throw()
+{
+	return "FORM ERROR: Form is not signed";
 }
 
 std::ostream & operator<<(std::ostream & o, AForm const & f)
