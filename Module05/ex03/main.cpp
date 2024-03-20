@@ -5,12 +5,24 @@
 int main()
 {
 	Intern intern;
+	AForm * sc;
+	AForm * rr;
+	AForm * pp;
+	AForm * error;
 
-	AForm * sc = intern.makeForm("Shrubbery Creation", "Forest");
-	AForm * rr = intern.makeForm("ROBOTOMY REQUEST", "David");
-	AForm * pp = intern.makeForm("presidential pardon", "Johnson");
-	AForm * error = intern.makeForm("scform", "nobody");
-	(void)error;
+	try
+	{
+		sc = intern.makeForm("Shrubbery Creation", "Forest");
+		rr = intern.makeForm("ROBOTOMY REQUEST", "David");
+		pp = intern.makeForm("presidential pardon", "Johnson");
+		error = intern.makeForm("scform", "nobody");
+		(void)error;
+	}
+	catch (std::exception const & e)
+	{
+		std::cout << e.what() << std::endl;
+		exit(errno);
+	}
 
 	Bureaucrat boss("The boss", 1);
 	boss.signForm(*sc);
@@ -19,4 +31,9 @@ int main()
 	boss.executeForm(*sc);
 	boss.executeForm(*rr);
 	boss.executeForm(*pp);
+
+	delete sc;
+	delete rr;
+	delete pp;
+	delete error;
 }

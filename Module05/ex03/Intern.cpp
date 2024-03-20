@@ -61,15 +61,7 @@ AForm * Intern::makeForm(std::string name, std::string const & target) const
 
 	for (int i = 0; i < 3; i++)
 		if (name == _formNames[i])
-		{
 			form = (this->*_newFormFns[i])(target);
-			if (form == NULL)
-			{
-				std::cout << "Intern cannot create " << name
-					<< " because there is no more storage." << std::endl;
-				return NULL;
-			}
-		}
 	
 	if (form)
 		std::cout << "Intern creates " << name << "." << std::endl;
