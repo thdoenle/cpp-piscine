@@ -5,8 +5,6 @@
 #include <cmath>
 #include <limits>
 
-#include <bitset>
-
 int ScalarConverter::detectType(std::string const & literal)
 {
 	if (literal.size() == 1 && !isdigit(literal[0]))
