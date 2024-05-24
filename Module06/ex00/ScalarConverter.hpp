@@ -17,6 +17,10 @@ private:
 	};
 
 	static int detectType(std::string const & literal);
+	static void convertFromChar(std::string const & literal);
+	static void convertFromInt(std::string const & literal);
+	static void convertFromFloat(std::string const & literal);
+	static void convertFromDouble(std::string const & literal);
 
 public:
 
