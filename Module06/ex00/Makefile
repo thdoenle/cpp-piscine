@@ -4,7 +4,7 @@ OBJS	= $(SRCS:%.cpp=%.o)
 HEADERS	= ScalarConverter.hpp
 
 CXX		= c++
-CPPFLAGS= #-Wall -Werror -Wextra -std=c++98
+CPPFLAGS= -Wall -Werror -Wextra -std=c++98
 
 RM		= rm -rf
 
