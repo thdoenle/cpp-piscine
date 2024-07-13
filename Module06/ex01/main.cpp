@@ -4,20 +4,14 @@
 
 int main(void)
 {
-  Data data;
+	Data data = {42, -42, 21.21};
 
-  data.l = 42000000000;
-  data.i = -42;
-  data.d = 0.42!
-  uintptr_t rawPtr = Serializer::serialize(&data);
-  Data *ptr = Serializer::deserialize(uintptr_t rawPtr);
+	uintptr_t rawDataPtr;
+	Data * dataPtr;
 
-  std::cout << "Addresses: << std::endl;
-  std::cout << &data << std::endl;
-  std::cout << rawPtr << std::endl;
-  std::cout << ptr << std::endl;
-  std::cout << "Values: << std::endl;
-  std::cout << ptr->l << std::endl;
-  std::cout << ptr->i << std::endl;
-  std::cout << ptr->d << std::endl;
+	rawDataPtr = Serializer::serialize(&data);
+	dataPtr = Serializer::deserialize(rawDataPtr);
+
+	std::cout << dataPtr->l << " " << dataPtr->i
+		<< " " << dataPtr->d << std::endl;
 }
