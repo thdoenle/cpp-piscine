@@ -16,6 +16,11 @@ private:
 		DOUBLE
 	};
 
+	ScalarConverter(void);
+	ScalarConverter(ScalarConverter const & sc);
+	~ScalarConverter(void);
+	ScalarConverter & operator=(ScalarConverter const & rhs);
+
 	static int detectType(std::string const & literal);
 	static void convertFromChar(std::string const & literal);
 	static void convertFromInt(std::string const & literal);

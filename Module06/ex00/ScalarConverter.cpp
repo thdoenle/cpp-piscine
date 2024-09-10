@@ -5,6 +5,18 @@
 #include <cmath>
 #include <limits>
 
+ScalarConverter::ScalarConverter(void) {}
+
+ScalarConverter::ScalarConverter(ScalarConverter const & sc) {(void)sc;}
+
+ScalarConverter::~ScalarConverter(void) {}
+
+ScalarConverter & ScalarConverter::operator=(ScalarConverter const & rhs)
+{
+	(void)rhs;
+	return *this;
+}
+
 int ScalarConverter::detectType(std::string const & literal)
 {
 	if (literal.size() == 1 && !isdigit(literal[0]))

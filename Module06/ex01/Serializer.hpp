@@ -5,6 +5,13 @@
 
 class Serializer
 {
+private:
+
+	Serializer(void);
+	Serializer(Serializer const & s);
+	~Serializer(void);
+	Serializer & operator=(Serializer const & rhs);
+
 public:
 
 	static uintptr_t serialize(Data * ptr);
