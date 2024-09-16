@@ -8,4 +8,5 @@ int main(int ac, char **av)
 	(void)av;
 
 	BitcoinExchange bExchange;
+	bExchange.dbInit("data.csv");
 }

@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include <exception>
+#include <ctime>
 
 class BitcoinExchange
 {
@@ -11,7 +12,8 @@ private:
 
 	std::map<std::string, float> _dict;
 
-	void checkDate(std::string const & line) const;
+	void checkDate(std::string const & line, char sep) const;
+	void checkValue(std::string const & line, char sep) const;
 
 public:
 
@@ -20,15 +22,29 @@ public:
 	~BitcoinExchange(void);
 	BitcoinExchange & operator=(BitcoinExchange const & rhs);
 
-	std::map<std::string, float> const & get_dict(void) const;
+	void dbInit(std::string const & dbFileName);
 
-	class InexistantDateException : std::exception
+	std::map<std::string, float> const & getDict(void) const;
+
+	class InexistantDateException : public std::exception
 	{
 	public:
 		virtual const char * what(void) const throw();
 	};
 
-	class BadDateFormatException : std::exception
+	class BadDateFormatException : public std::exception
+	{
+	public:
+		virtual const char * what(void) const throw();
+	};
+
+	class NoValueException : public std::exception
+	{
+	public:
+		virtual const char * what(void) const throw();
+	};
+
+	class BadValueException : public std::exception
 	{
 	public:
 		virtual const char * what(void) const throw();
