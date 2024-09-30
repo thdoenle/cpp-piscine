@@ -1,7 +1,23 @@
 #include "BitcoinExchange.hpp"
 #include <iostream>
+#include <fstream>
 #include <ctime>
 #include <cstdlib>
+
+bool less::operator()(const std::string& x, const std::string& y) const
+{
+	std::string::const_iterator xIt = x.begin();
+	std::string::const_iterator yIt = y.begin();
+
+	while (xIt != x.end() && *xIt == *yIt)
+	{
+		xIt++;
+		yIt++;
+	}
+	if (*xIt > *yIt)
+		return true;
+	return false;
+}
 
 BitcoinExchange::BitcoinExchange(void) {}
 
@@ -18,27 +34,63 @@ BitcoinExchange & BitcoinExchange::operator=(BitcoinExchange const & rhs)
 
 void BitcoinExchange::dbInit(std::string const & dbFileName)
 {
-	(void)dbFileName;
-	std::string line = "2024-34-01";
-	try
+	std::ifstream file(dbFileName.c_str());
+	std::string line;
+
+	if (!file.is_open())
+		throw FileError();
+	std::getline(file, line);
+	while (!file.eof())
 	{
-		checkDate(line, ',');
-		std::cout << line << " is OK" << std::endl;
+		std::getline(file, line);
+		if (line == "")
+			continue;
+		if (file.fail())
+			throw FileError();
+		try
+		{
+			checkDate(line, ',');
+			checkValue(line, ',');
+			_dict.insert(extractDateValue(line));
+		}
+		catch (const std::exception& e)
+		{
+			std::cerr << e.what() << " => " << line << std::endl;
+		}
 	}
-	catch (const std::exception& e)
+}
+
+void BitcoinExchange::inputDbEstimate(std::string const & inputDbFileName)
+{
+	std::ifstream file(inputDbFileName.c_str());
+	std::string line;
+	std::pair<std::string, float> p;
+
+	if (!file.is_open())
+		throw FileError();
+	std::getline(file, line);
+	while (!file.eof())
 	{
-		std::cerr << e.what() << " => " << line << std::endl;
-	}
-	line = "2024-12-22   ,   1";
-	try
-	{
-		checkDate(line, ',');
-		checkValue(line, ',');
-		std::cout << line << " is OK" << std::endl;
-	}
-	catch (const std::exception& e)
-	{
-		std::cerr << e.what() << " => " << line << std::endl;
+		std::getline(file, line);
+		if (line == "")
+			continue;
+		if (file.fail())
+			throw FileError();
+		try
+		{
+			checkDate(line, '|');
+			checkValue(line, '|');
+			p = extractDateValue(line);
+			if (_dict.lower_bound(p.first) == _dict.end())
+				throw TooOldDateException();
+			std::cout << p.first << " => " << p.second << " = "
+				<< (*(_dict.lower_bound(p.first))).second * p.second
+				<< std::endl;
+		}
+		catch (const std::exception& e)
+		{
+			std::cerr << e.what() << " => " << line << std::endl;
+		}
 	}
 }
 
@@ -50,7 +102,6 @@ void BitcoinExchange::checkDate(std::string const & line, char sep) const
 
 	while (fIt < format.end())
 	{
-		std::cout << "'" << *lIt << "'" << std::endl;
 		if (lIt == line.end()
 			|| (*fIt == 'N' && !std::isdigit(*lIt))
 			|| (*fIt == '-' && *lIt != '-'))
@@ -77,9 +128,7 @@ void BitcoinExchange::checkDate(std::string const & line, char sep) const
     tm.tm_min = 0;
     tm.tm_sec = 0;
     tm.tm_isdst = 0;
-	std::cout << tm.tm_year + 1900 << " " << tm.tm_mon + 1 << " " << tm.tm_mday << std::endl;
 	mktime(&tm);
-	std::cout << tm.tm_year + 1900 << " " << tm.tm_mon + 1 << " " << tm.tm_mday << std::endl;
 	if (year != tm.tm_year + 1900 || mon != tm.tm_mon + 1 || mday != tm.tm_mday)
 		throw InexistantDateException();
 }
@@ -87,6 +136,8 @@ void BitcoinExchange::checkDate(std::string const & line, char sep) const
 void BitcoinExchange::checkValue(std::string const & line, char sep) const
 {
 	std::string::const_iterator lIt = line.begin();
+	std::string::const_iterator vIt;
+	int nDigits = 0;
 	bool dotEncountered = false;
 
 	while (lIt != line.end() && *lIt != sep)
@@ -98,17 +149,37 @@ void BitcoinExchange::checkValue(std::string const & line, char sep) const
 		lIt++;
 	if (lIt == line.end())
 		throw NoValueException();
+	vIt = lIt;
 	while (lIt != line.end())
 	{
 		if (!std::isdigit(*lIt) && (dotEncountered || *lIt != '.'))
 			throw BadValueException();
 		if (*lIt == '.')
 			dotEncountered = true;
+		if (!dotEncountered)
+			nDigits++;
 		lIt++;
 	}
+	if (nDigits > 10 || atof(&*vIt) > 2147483647)
+		throw TooBigValueException();
 }
 
-std::map<std::string, float> const & BitcoinExchange::getDict(void) const
+std::pair<std::string, float> BitcoinExchange::extractDateValue(std::string const & line)
+{
+	std::string date = line.substr(0, 10);
+	float value;
+	int valueI = 10;
+
+	while (isspace(line[valueI]))
+		valueI++;
+	valueI++;
+	while (isspace(line[valueI]))
+		valueI++;
+	value = atof(line.substr(valueI).c_str());
+	return std::make_pair(date, value);
+}
+
+std::map<std::string, float, less> const & BitcoinExchange::getDict(void) const
 {
 	return _dict;
 }
@@ -123,6 +194,11 @@ const char * BitcoinExchange::BadDateFormatException::what(void) const throw()
 	return "Error: Date format is bad";
 }
 
+const char * BitcoinExchange::TooOldDateException::what(void) const throw()
+{
+	return "Error: Date is too old for database";
+}
+
 const char * BitcoinExchange::NoValueException::what(void) const throw()
 {
 	return "Error: No value indicated";
@@ -131,4 +207,14 @@ const char * BitcoinExchange::NoValueException::what(void) const throw()
 const char * BitcoinExchange::BadValueException::what(void) const throw()
 {
 	return "Error: Value should be a positive floating number";
+}
+
+const char * BitcoinExchange::TooBigValueException::what(void) const throw()
+{
+	return "Error: Value is too big";
+}
+
+const char * BitcoinExchange::FileError::what(void) const throw()
+{
+	return "Error: File failed to be read";
 }
